@@ -1,4 +1,4 @@
-package kg.iceknight.grazygo.service;
+ package kg.iceknight.grazygo.service;
 
 import android.app.Notification;
 import android.app.NotificationManager;
@@ -40,6 +40,7 @@ public class NotificationService {
 
             PendingIntent pendingIntentControl = context.createPendingResult(requestCode, new Intent(), 0);
             PendingIntent pendingIntentExit = context.createPendingResult(EXIT_REQUEST_CODE, new Intent(), PendingIntent.FLAG_CANCEL_CURRENT);
+            //TODO: create behavior and pendingIntent for close(X) button
 
             NotificationCompat.Builder mBuilder =
                     new NotificationCompat.Builder(context)
@@ -49,8 +50,11 @@ public class NotificationService {
                             .setContentTitle("CrazyGo. Start")
                             .setContentText("Press buttons")
                             .addAction(controlIcon, infoText, pendingIntentControl)
-                            .addAction(R.drawable.ic_clear_white_24dp, "Exit", pendingIntentExit)
-                            .setStyle(new android.support.v4.media.app.NotificationCompat.DecoratedMediaCustomViewStyle().setShowCancelButton(true))
+                            .setPriority(Notification.PRIORITY_HIGH)
+                            .addAction(R.drawable.ic_power_settings_new_white_24dp, "Exit", pendingIntentExit)
+                            .setStyle(new android.support.v4.media.app.NotificationCompat.MediaStyle()
+                                    .setShowCancelButton(true)
+                                    .setShowActionsInCompactView(0, 1))
                             .setVisibility(Notification.VISIBILITY_PUBLIC);
 
             Intent resultIntent = new Intent(context, MainActivity.class);
