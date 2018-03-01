@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.support.annotation.RequiresApi;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.Button;
-import android.widget.Toast;
 
 import kg.iceknight.grazygo.handler.MainButtonHandler;
 import kg.iceknight.grazygo.handler.NotificationButtonHandler;
@@ -14,8 +13,6 @@ import kg.iceknight.grazygo.service.NotificationService;
 
 import static kg.iceknight.grazygo.common.Constants.EXIT_REQUEST_CODE;
 import static kg.iceknight.grazygo.common.Constants.NOTIFICATION_ID;
-import static kg.iceknight.grazygo.common.Constants.PAUSE_REQUEST_CODE;
-import static kg.iceknight.grazygo.common.Constants.PLAY_REQUEST_CODE;
 
 public class MainActivity extends AppCompatActivity {
 
