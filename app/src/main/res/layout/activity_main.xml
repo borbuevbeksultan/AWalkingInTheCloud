@@ -16,6 +16,30 @@
         android:id="@+id/notificationButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:onClick="show"
         android:text="Show notification" />
+    <Button
+        android:text="start"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:onClick="startService"
+        />
+    <Button
+        android:text="oause"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:onClick="pauseService"
+        />
+    <Button
+        android:text="resume"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:onClick="resumeService"
+        />
+    <Button
+        android:text="reset"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:onClick="resetService"
+        />
+
 </LinearLayout>
