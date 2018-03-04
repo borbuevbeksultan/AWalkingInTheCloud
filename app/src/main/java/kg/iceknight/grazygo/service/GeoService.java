@@ -4,11 +4,11 @@ import android.location.Location;
 import android.location.LocationManager;
 
 public class GeoService {
-    public static Location calcNextCoord(Location location, Long offset) {
+    public static Location calcNextCoord(Location location) {
         Double latitude = location.getLatitude();
         Double longitute = location.getLongitude();
 
-        Double delta = offset / 13.7D;
+        Double delta = 50L / 13.7D;
 
         latitude += (delta/10000D);
         longitute += (delta/10000D);

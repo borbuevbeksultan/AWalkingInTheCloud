@@ -16,7 +16,6 @@ public class MainButtonHandler implements View.OnClickListener {
 
     @Override
     public void onClick(View view) {
-        Intent intent = new Intent(context, MockService.class);
-        context.startService(intent);
+        //run mock
     }
 }

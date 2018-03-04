@@ -1,55 +1,30 @@
 package kg.iceknight.grazygo.service;
 
 import android.annotation.SuppressLint;
-import android.app.PendingIntent;
-import android.app.Service;
-import android.content.Intent;
+import android.content.Context;
 import android.location.Location;
 import android.location.LocationManager;
 import android.location.LocationProvider;
-import android.os.IBinder;
 import android.os.SystemClock;
-import android.support.annotation.Nullable;
 
-public class MockService extends Service {
+import static android.content.Context.LOCATION_SERVICE;
 
+public class MockService {
+
+    private Context context;
     private LocationManager locationManager;
+    private Location currentLocation;
 
-    @Nullable
-    @Override
-    public IBinder onBind(Intent intent) {
-        return null;
-    }
-
-    @Override
-    public void onCreate() {
-        super.onCreate();
-        locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        locationManager = null;
-    }
-
-    @Override
     @SuppressLint("MissingPermission")
-    public int onStartCommand(Intent intent, int flags, int startId) {
-        Location currentLocation = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
-        new Thread(() -> {
-            for (int i = 0; i < 50; i++) {
-                setLocation(GeoService.calcNextCoord(currentLocation, 50L * i));
-                try {
-                    Thread.sleep(1000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-            }
-            disableMockLocation();
-            stopSelf(startId);
-        }).start();
-        return super.onStartCommand(intent, flags, startId);
+    public MockService(Context context) {
+        this.context = context;
+        locationManager = (LocationManager) context.getSystemService(LOCATION_SERVICE);
+        currentLocation = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+    }
+
+    public void walk() {
+        currentLocation = GeoService.calcNextCoord(currentLocation);
+        setLocation(currentLocation);
     }
 
     @SuppressLint("NewApi")

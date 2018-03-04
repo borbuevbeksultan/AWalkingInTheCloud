@@ -27,9 +27,9 @@ public class NotificationDaemon extends Service {
     @SuppressLint("NewApi")
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        int request = intent.getIntExtra("12", 0);
-        Log.d(LOG, "Notification Daemon onStartCommand. StartId = " + startId + " request = " + request + " hashcode " + intent.hashCode());
+        Log.d(LOG, "Notification Daemon onStartCommand. StartId = " + startId + " hashcode " + intent.hashCode());
         ServiceCollection.getNotificationService().config(ServiceCollection.getControlStatus()).showNotification();
+        ServiceCollection.getMockHelperService().processRequest(ServiceCollection.getControlStatus());
         stopSelf(startId);
         return super.onStartCommand(intent, flags, startId);
     }
