@@ -56,4 +56,5 @@ public class MockService {
             locationManager.removeTestProvider(LocationManager.GPS_PROVIDER);
         }
     }
+
 }

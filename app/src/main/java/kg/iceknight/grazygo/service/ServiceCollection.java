@@ -1,8 +1,29 @@
 package kg.iceknight.grazygo.service;
 
+import kg.iceknight.grazygo.MainActivity;
+
 public class ServiceCollection {
 
     private static NotificationService notificationService;
+    private static MainActivity mainActivity;
+
+    public static MainActivity getMainActivity() {
+        return mainActivity;
+    }
+
+    public static void setMainActivity(MainActivity mainActivity) {
+        ServiceCollection.mainActivity = mainActivity;
+    }
+
+    public static MockHelperService getMockHelperService() {
+        return mockHelperService;
+    }
+
+    public static void setMockHelperService(MockHelperService mockHelperService) {
+        ServiceCollection.mockHelperService = mockHelperService;
+    }
+
+    private static MockHelperService mockHelperService;
 
     public static int getControlStatus() {
         return controlStatus;

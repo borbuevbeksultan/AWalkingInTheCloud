@@ -31,4 +31,8 @@ public class MockHelperService {
 
         }
     }
+
+    public void reset() {
+        mockingService.reset();
+    }
 }

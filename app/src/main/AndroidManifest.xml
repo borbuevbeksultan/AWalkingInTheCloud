@@ -26,8 +26,10 @@
             </intent-filter>
         </activity>
 
-        <service android:name=".service.daemon.NotificationDaemon" />
+        <service android:name=".service.daemon.NotificationControlDaemon" />
         <service android:name=".background.service.MockingService" />
+        <service android:name=".service.daemon.NotificationExitDaemon" />
+        <service android:name=".service.daemon.NotificationResetDaemon" />
     </application>
 
 </manifest>
