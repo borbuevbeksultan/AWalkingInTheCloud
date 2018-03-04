@@ -1,6 +1,7 @@
 package kg.iceknight.grazygo.common;
 
 public class Constants {
+    public static final String LOG_TAG = "GRAZY_GO";
     public static final int NOTIFICATION_ID = 77;
     public static final int PLAY_REQUEST_CODE = 43;
     public static final int PAUSE_REQUEST_CODE = 44;

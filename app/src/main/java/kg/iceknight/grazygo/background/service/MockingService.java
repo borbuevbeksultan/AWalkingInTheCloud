@@ -4,6 +4,7 @@ import android.app.Service;
 import android.content.Intent;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
+import android.util.Log;
 
 import java.util.Timer;
 import java.util.TimerTask;
@@ -16,28 +17,23 @@ import kg.iceknight.grazygo.service.MockService;
 import static kg.iceknight.grazygo.common.Constants.DEFAULT_DELAY_FOR_TIMER_TASK;
 import static kg.iceknight.grazygo.common.Constants.DEFAULT_PERIOD_FOR_TIMER_TASK;
 import static kg.iceknight.grazygo.common.Constants.JUMP_INTERVAL_METERS;
+import static kg.iceknight.grazygo.common.Constants.LOG_TAG;
 
 public class MockingService extends Service {
 
     private MockService mockService;
-    private TimerTask timerTask;
     private Timer timer;
     AtomicInteger remainSteps;
 
     @Nullable
     @Override
     public IBinder onBind(Intent intent) {
-        int km_distance = intent.getIntExtra("distance", 2);
-        int meters = km_distance * 1000;
-        remainSteps = new AtomicInteger(meters / JUMP_INTERVAL_METERS);
-        timer = new Timer();
-        timerTask = new MockTimerTask(mockService, timer, remainSteps);
-        timer.schedule(timerTask, DEFAULT_DELAY_FOR_TIMER_TASK, DEFAULT_PERIOD_FOR_TIMER_TASK);
         return new ServiceBinder(this);
     }
 
     @Override
     public void onCreate() {
+        Log.d(LOG_TAG, "MockingService: onCreate");
         super.onCreate();
         mockService = new MockService(this);
         remainSteps = new AtomicInteger(0);
@@ -55,25 +51,35 @@ public class MockingService extends Service {
         timer.cancel();
         mockService = null;
         timer = null;
+        Log.d(LOG_TAG, "MockingService: onDestroy");
     }
 
     @Override
-    public void onRebind(Intent intent) {
-        onDestroy();
+    public boolean onUnbind(Intent intent) {
+        Log.d(LOG_TAG, "MockingService: onUnbind");
+        return super.onUnbind(intent);
     }
 
-    public void resume() {
+    public void resumeOrStart() {
+        Log.d(LOG_TAG, "MockingService: resumeOrStart");
         timer = new Timer();
-        timerTask = new MockTimerTask(mockService, timer, remainSteps);
+        TimerTask timerTask = new MockTimerTask(mockService, timer, remainSteps);
         timer.schedule(timerTask, DEFAULT_DELAY_FOR_TIMER_TASK, DEFAULT_PERIOD_FOR_TIMER_TASK);
     }
 
     public void pause() {
+        Log.d(LOG_TAG, "MockingService: pause");
         timer.cancel();
     }
 
     public void reset() {
         mockService = new MockService(this);
+    }
+
+    public void setParam(Double distanceInKm) {
+        Log.d(LOG_TAG, "MockingService: setParam: param = " + distanceInKm.toString());
+        int meters = (int) (distanceInKm * 1000);
+        remainSteps = new AtomicInteger(meters / JUMP_INTERVAL_METERS);
     }
 
 }

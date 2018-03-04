@@ -76,6 +76,7 @@ public class NotificationService {
     public NotificationService config(int requestCode) {
 
         if (requestCode == PLAY_REQUEST_CODE) {
+
             this.requestCode = PAUSE_REQUEST_CODE;
             this.controlIcon = R.drawable.ic_pause_white_24dp;
             this.infoText = "Pause";
