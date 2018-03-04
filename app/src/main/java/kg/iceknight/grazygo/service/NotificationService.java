@@ -1,24 +1,26 @@
  package kg.iceknight.grazygo.service;
 
-import android.app.Notification;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
-import android.content.Context;
-import android.content.Intent;
-import android.graphics.BitmapFactory;
-import android.os.Build;
-import android.support.annotation.RequiresApi;
-import android.support.v4.app.NotificationCompat;
+ import android.app.Notification;
+ import android.app.NotificationManager;
+ import android.app.PendingIntent;
+ import android.content.Context;
+ import android.content.Intent;
+ import android.graphics.BitmapFactory;
+ import android.os.Build;
+ import android.support.annotation.RequiresApi;
+ import android.support.v4.app.NotificationCompat;
 
-import kg.iceknight.grazygo.MainActivity;
-import kg.iceknight.grazygo.R;
+ import java.io.Serializable;
 
-import static kg.iceknight.grazygo.common.Constants.EXIT_REQUEST_CODE;
-import static kg.iceknight.grazygo.common.Constants.NOTIFICATION_ID;
-import static kg.iceknight.grazygo.common.Constants.PAUSE_REQUEST_CODE;
-import static kg.iceknight.grazygo.common.Constants.PLAY_REQUEST_CODE;
+ import kg.iceknight.grazygo.MainActivity;
+ import kg.iceknight.grazygo.R;
+ import kg.iceknight.grazygo.service.daemon.NotificationDaemon;
 
-public class NotificationService {
+ import static kg.iceknight.grazygo.common.Constants.NOTIFICATION_ID;
+ import static kg.iceknight.grazygo.common.Constants.PAUSE_REQUEST_CODE;
+ import static kg.iceknight.grazygo.common.Constants.PLAY_REQUEST_CODE;
+
+public class NotificationService implements Serializable {
 
     private final NotificationManager mNotificationManager;
     private final MainActivity context;
@@ -38,9 +40,15 @@ public class NotificationService {
     public void showNotification() {
         try {
 
-            PendingIntent pendingIntentControl = context.createPendingResult(requestCode, new Intent(), 0);
-            PendingIntent pendingIntentExit = context.createPendingResult(EXIT_REQUEST_CODE, new Intent(), PendingIntent.FLAG_CANCEL_CURRENT);
-            //TODO: create behavior and pendingIntent for close(X) button
+            Intent intent1 = new Intent(context, NotificationDaemon.class);
+            Intent intent2 = new Intent(context, NotificationDaemon.class);
+            PendingIntent pendingIntentControl = PendingIntent.getService(context, 10, intent1, 0);
+            ServiceCollection.setControlStatus(requestCode);
+            PendingIntent pendingIntentExit = PendingIntent.getService(context, 9,intent2, PendingIntent.FLAG_CANCEL_CURRENT);
+
+//            PendingIntent pendingIntentControl = context.createPendingResult(requestCode, new Intent(), 0);
+//            PendingIntent pendingIntentExit = context.createPendingResult(EXIT_REQUEST_CODE, new Intent(), PendingIntent.FLAG_CANCEL_CURRENT);
+//            //TODO: create behavior and pendingIntent for close(X) button
 
             NotificationCompat.Builder mBuilder =
                     new NotificationCompat.Builder(context)
