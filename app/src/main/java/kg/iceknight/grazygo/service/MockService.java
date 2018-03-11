@@ -6,14 +6,17 @@ import android.location.Location;
 import android.location.LocationManager;
 import android.location.LocationProvider;
 import android.os.SystemClock;
+import android.util.Log;
 
 import static android.content.Context.LOCATION_SERVICE;
+import static kg.iceknight.grazygo.common.Constants.LOG_TAG;
 
 public class MockService {
 
     private Context context;
     private LocationManager locationManager;
     private Location currentLocation;
+    private boolean isMockActivated = false;
 
     @SuppressLint("MissingPermission")
     public MockService(Context context) {
@@ -23,13 +26,28 @@ public class MockService {
     }
 
     public void walk() {
-        currentLocation = GeoService.calcNextCoord(currentLocation);
+        if (!isMockActivated) {
+            isMockActivated = true;
+            if (null != ServiceCollection.getChoosedLocation()) {
+                currentLocation = ServiceCollection.getChoosedLocation();
+            }
+        }
+        currentLocation = GeoService.calcNextCoord(currentLocation, 50);
         setLocation(currentLocation);
     }
 
-    @SuppressLint("NewApi")
-    private Location setLocation(Location mockLocation) {
+    public void jump(Integer distance) {
+        if (null == ServiceCollection.getChoosedLocation()) {
+            setLocation(GeoService.calcNextCoord(currentLocation, distance));
+        } else {
+            setLocation(GeoService.calcNextCoord(ServiceCollection.getChoosedLocation(), distance));
+        }
 
+    }
+
+    @SuppressLint("NewApi")
+    public Location setLocation(Location mockLocation) {
+        Log.d(LOG_TAG, "MockService setLocation " + mockLocation.toString());
         Location location = new Location(LocationManager.GPS_PROVIDER);
         locationManager.addTestProvider(LocationManager.GPS_PROVIDER, false, false,
                 false, false, true,
@@ -58,3 +76,4 @@ public class MockService {
     }
 
 }
+

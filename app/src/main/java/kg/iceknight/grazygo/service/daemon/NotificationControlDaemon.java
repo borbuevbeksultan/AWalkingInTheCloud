@@ -10,7 +10,6 @@ import android.util.Log;
 import kg.iceknight.grazygo.service.ServiceCollection;
 
 import static kg.iceknight.grazygo.common.Constants.LOG;
-import static kg.iceknight.grazygo.common.Constants.NOTIFICATION_ID;
 
 public class NotificationControlDaemon extends Service {
     @Nullable
@@ -29,8 +28,9 @@ public class NotificationControlDaemon extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         Log.d(LOG, "Notification Daemon onStartCommand. StartId = " + startId + " hashcode " + intent.hashCode());
-        ServiceCollection.getNotificationService().cancelNotification(NOTIFICATION_ID);
         ServiceCollection.getMockHelperService().processRequest(ServiceCollection.getControlStatus());
+        ServiceCollection.getVibrator().vibrate(100);
+        ServiceCollection.getMainButtonHandler().set();
         stopSelf(startId);
         return super.onStartCommand(intent, flags, startId);
     }

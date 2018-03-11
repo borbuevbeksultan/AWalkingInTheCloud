@@ -1,10 +1,15 @@
 package kg.iceknight.grazygo.background.service.helper;
 
+import android.annotation.SuppressLint;
+import android.util.Log;
+
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import kg.iceknight.grazygo.common.Constants;
 import kg.iceknight.grazygo.service.MockService;
+import kg.iceknight.grazygo.service.ServiceCollection;
 
 public class MockTimerTask extends TimerTask {
 
@@ -18,13 +23,18 @@ public class MockTimerTask extends TimerTask {
         this.iterations = iterations;
     }
 
+    @SuppressLint("NewApi")
     @Override
     public void run() {
 
         if (iterations.get() <= 0) {
+            ServiceCollection.getNotificationService().config(Constants.PAUSE_REQUEST_CODE).showNotification();
+            ServiceCollection.getMainActivity().runOnUiThread(() -> ServiceCollection.getMockHelperService().reset());
+            ServiceCollection.getVibrator().vibrate(100);
             executor.cancel();
+            return;
         }
-
+        Log.d(Constants.LOG_TAG, "TimerTask remain = " + iterations.toString());
         mockService.walk();
         iterations.decrementAndGet();
 

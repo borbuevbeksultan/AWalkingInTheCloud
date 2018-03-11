@@ -20,6 +20,7 @@ public class NotificationResetDaemon extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         ServiceCollection.getNotificationService().config(Constants.PAUSE_REQUEST_CODE).showNotification();
+        ServiceCollection.getVibrator().vibrate(100);
         ServiceCollection.getMockHelperService().reset();
         stopSelf(startId);
         return super.onStartCommand(intent, flags, startId);

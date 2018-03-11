@@ -9,6 +9,7 @@
  import android.os.Build;
  import android.support.annotation.RequiresApi;
  import android.support.v4.app.NotificationCompat;
+ import android.util.Log;
 
  import java.io.Serializable;
 
@@ -18,6 +19,7 @@
  import kg.iceknight.grazygo.service.daemon.NotificationExitDaemon;
  import kg.iceknight.grazygo.service.daemon.NotificationResetDaemon;
 
+ import static kg.iceknight.grazygo.common.Constants.LOG_TAG;
  import static kg.iceknight.grazygo.common.Constants.NOTIFICATION_ID;
  import static kg.iceknight.grazygo.common.Constants.PAUSE_REQUEST_CODE;
  import static kg.iceknight.grazygo.common.Constants.PLAY_REQUEST_CODE;
@@ -43,6 +45,8 @@ public class NotificationService implements Serializable {
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
     public void showNotification() {
         try {
+
+            Log.d(LOG_TAG, "MockingService: showNotification: requestCode = " + this.requestCode);
 
             Intent runDaemonIntent = new Intent(context, NotificationControlDaemon.class);
             Intent resetDaemonIntent = new Intent(context, NotificationResetDaemon.class);
@@ -70,14 +74,13 @@ public class NotificationService implements Serializable {
                                     .setShowActionsInCompactView(0, 1))
                             .setVisibility(Notification.VISIBILITY_PUBLIC);
 
-            Intent resultIntent = new Intent(context, MainActivity.class);
+            Intent resultIntent = new Intent();
             PendingIntent pendingIntent =
                     PendingIntent.getActivity(context,
                             0,
                             resultIntent,
                             PendingIntent.FLAG_UPDATE_CURRENT);
             mBuilder.setContentIntent(pendingIntent);
-            mBuilder.setAutoCancel(true);
             mNotificationManager.notify(NOTIFICATION_ID, mBuilder.build());
 
         } catch (Exception e) {
@@ -87,7 +90,7 @@ public class NotificationService implements Serializable {
     }
 
     public NotificationService config(int requestCode) {
-
+        Log.d(LOG_TAG, "MockingService: config: requestCode = " + requestCode);
         if (requestCode == PLAY_REQUEST_CODE) {
 
             this.requestCode = PAUSE_REQUEST_CODE;
