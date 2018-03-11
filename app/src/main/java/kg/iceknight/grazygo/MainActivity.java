@@ -22,6 +22,8 @@ import android.widget.NumberPicker;
 import android.widget.RadioButton;
 import android.widget.Toast;
 
+import java.util.concurrent.Executors;
+
 import kg.iceknight.grazygo.background.service.MockingService;
 import kg.iceknight.grazygo.background.service.helper.ServiceBinder;
 import kg.iceknight.grazygo.handler.ExitButtonHandler;
@@ -49,18 +51,25 @@ public class MainActivity extends AppCompatActivity {
     public Integer variant = 1;
 
 
+    @SuppressLint("NewApi")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Log.d(LOG_TAG, "MainActivity onCreate()");
+        setContentView(R.layout.main_activity);
+        initializeUI();
         if (ActivityCompat
                 .checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
                 ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this ,new String[]{Manifest.permission.ACCESS_FINE_LOCATION},1);
             ActivityCompat.requestPermissions(this ,new String[]{Manifest.permission.ACCESS_COARSE_LOCATION},2);
         }
-        setContentView(R.layout.main_activity);
-        initializeUI();
-        Log.d(LOG_TAG, "MainActivity onCreate()");
+        if (Settings.Secure.getString(getContentResolver(),
+                Settings.Secure.ALLOW_MOCK_LOCATION).equals("0")) {
+            Toast.makeText(MainActivity.this, "Включите фиктивное местоположение", Toast.LENGTH_LONG).show();
+            startActivity(new Intent(android.provider.Settings.ACTION_APPLICATION_DEVELOPMENT_SETTINGS));
+        }
+
     }
 
     @Override
