@@ -1,60 +1,53 @@
 package kg.iceknight.grazygo.service;
 
 import android.annotation.SuppressLint;
-import android.app.PendingIntent;
-import android.app.Service;
-import android.content.Intent;
+import android.content.Context;
 import android.location.Location;
 import android.location.LocationManager;
 import android.location.LocationProvider;
-import android.os.IBinder;
 import android.os.SystemClock;
-import android.support.annotation.Nullable;
+import android.util.Log;
 
-public class MockService extends Service {
+import static android.content.Context.LOCATION_SERVICE;
+import static kg.iceknight.grazygo.common.Constants.LOG_TAG;
 
+public class MockService {
+
+    private Context context;
     private LocationManager locationManager;
+    private Location currentLocation;
+    private boolean isMockActivated = false;
 
-    @Nullable
-    @Override
-    public IBinder onBind(Intent intent) {
-        return null;
-    }
-
-    @Override
-    public void onCreate() {
-        super.onCreate();
-        locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        locationManager = null;
-    }
-
-    @Override
     @SuppressLint("MissingPermission")
-    public int onStartCommand(Intent intent, int flags, int startId) {
-        Location currentLocation = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
-        new Thread(() -> {
-            for (int i = 0; i < 50; i++) {
-                setLocation(GeoService.calcNextCoord(currentLocation, 50L * i));
-                try {
-                    Thread.sleep(1000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
+    public MockService(Context context) {
+        this.context = context;
+        locationManager = (LocationManager) context.getSystemService(LOCATION_SERVICE);
+        currentLocation = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+    }
+
+    public void walk() {
+        if (!isMockActivated) {
+            isMockActivated = true;
+            if (null != ServiceCollection.getChoosedLocation()) {
+                currentLocation = ServiceCollection.getChoosedLocation();
             }
-            disableMockLocation();
-            stopSelf(startId);
-        }).start();
-        return super.onStartCommand(intent, flags, startId);
+        }
+        currentLocation = GeoService.calcNextCoord(currentLocation, 50);
+        setLocation(currentLocation);
+    }
+
+    public void jump(Integer distance) {
+        if (null == ServiceCollection.getChoosedLocation()) {
+            setLocation(GeoService.calcNextCoord(currentLocation, distance));
+        } else {
+            setLocation(GeoService.calcNextCoord(ServiceCollection.getChoosedLocation(), distance));
+        }
+
     }
 
     @SuppressLint("NewApi")
-    private Location setLocation(Location mockLocation) {
-
+    public Location setLocation(Location mockLocation) {
+        Log.d(LOG_TAG, "MockService setLocation " + mockLocation.toString());
         Location location = new Location(LocationManager.GPS_PROVIDER);
         locationManager.addTestProvider(LocationManager.GPS_PROVIDER, false, false,
                 false, false, true,
@@ -81,4 +74,6 @@ public class MockService extends Service {
             locationManager.removeTestProvider(LocationManager.GPS_PROVIDER);
         }
     }
+
 }
+

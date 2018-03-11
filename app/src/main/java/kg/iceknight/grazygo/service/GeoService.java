@@ -4,7 +4,7 @@ import android.location.Location;
 import android.location.LocationManager;
 
 public class GeoService {
-    public static Location calcNextCoord(Location location, Long offset) {
+    public static Location calcNextCoord(Location location, Integer offset) {
         Double latitude = location.getLatitude();
         Double longitute = location.getLongitude();
 

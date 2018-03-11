@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#000"
+    android:orientation="vertical"
+    tools:context="kg.iceknight.grazygo.MainActivity">
+
+    <TableLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="20dp"
+        android:weightSum="2">
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingBottom="20dp">
+
+            <LinearLayout android:layout_weight="1">
+
+                <NumberPicker
+                    android:id="@+id/numberPicker1"
+                    android:layout_width="50dp"
+                    android:layout_height="150dp"
+                    android:theme="@style/MyNumberPickerTheme" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="bottom"
+                    android:paddingLeft="5dp"
+                    android:text="km"
+                    android:textColor="#fff"
+                    android:textSize="22dp" />
+            </LinearLayout>
+
+            <LinearLayout android:layout_weight="1">
+
+                <NumberPicker
+                    android:id="@+id/numberPicker2"
+                    android:layout_width="50dp"
+                    android:layout_height="150dp"
+                    android:theme="@style/MyNumberPickerTheme" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="bottom"
+                    android:paddingLeft="5dp"
+                    android:text="sec"
+                    android:textColor="#fff"
+                    android:textSize="22dp" />
+            </LinearLayout>
+        </TableRow>
+
+        <TableRow>
+
+            <LinearLayout android:layout_weight="1">
+
+                <RadioButton
+                    android:id="@+id/variant1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Variant1"
+                    android:textColor="#fff"
+                    android:textSize="18dp"
+                    android:theme="@style/MyRadioButton" />
+            </LinearLayout>
+
+            <LinearLayout android:layout_weight="1">
+
+                <RadioButton
+                    android:id="@+id/variant2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Variant2"
+                    android:textColor="#fff"
+                    android:textSize="18dp"
+                    android:theme="@style/MyRadioButton" />
+            </LinearLayout>
+        </TableRow>
+
+        <TableRow
+            android:paddingBottom="20dp"
+            android:paddingTop="20dp">
+
+            <Button
+                android:id="@+id/mainButton"
+                android:layout_height="wrap_content"
+                android:layout_weight="2"
+                android:background="@drawable/mainbuttonready"
+                android:text="READY"
+                android:textSize="25sp" />
+        </TableRow>
+
+        <TableRow
+            android:layout_marginBottom="10dp"
+            android:layout_marginTop="10dp"
+            android:weightSum="2">
+
+            <EditText
+                android:id="@+id/editTextCoodr"
+                android:layout_height="wrap_content"
+                android:layout_weight="2"
+                android:background="#fff"
+                android:maxLength="25"
+                android:maxWidth="0dp"
+                android:textSize="25sp" />
+        </TableRow>
+
+        <TableRow
+            android:layout_marginTop="5sp"
+            android:layout_weight="2">
+
+            <Button
+                android:onClick="setButtonOnClick"
+                android:id="@+id/setBtn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="5dp"
+                android:layout_weight="1"
+                android:background="@drawable/setbutton"
+                android:textSize="25sp"
+                android:text="SET" />
+
+            <Button
+                android:id="@+id/resetBtn"
+                android:onClick="resetButtonOnClick"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:layout_weight="1"
+                android:background="@drawable/resetbutton"
+                android:textSize="25sp"
+                android:text="RESET" />
+
+
+        </TableRow>
+
+        <TableRow
+            android:layout_marginTop="20dp"
+            android:layout_weight="16">
+
+            <ImageView
+                android:id="@+id/logo"
+                android:layout_width="100dp"
+                android:layout_height="60dp"
+                android:layout_gravity="fill"
+                android:layout_weight="15"
+                android:contentDescription="TODO"
+                android:paddingEnd="100dp"
+                android:paddingRight="100dp"
+                android:src="@mipmap/pokemon_go_logo" />
+
+            <Button
+                android:id="@+id/exit"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom"
+                android:layout_weight="1"
+                android:text="Exit"
+                android:textSize="20dp" />
+        </TableRow>
+
+    </TableLayout>
+</LinearLayout>
