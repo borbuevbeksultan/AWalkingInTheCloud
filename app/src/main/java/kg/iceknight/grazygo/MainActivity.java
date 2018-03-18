@@ -1,10 +1,8 @@
 package kg.iceknight.grazygo;
 
-import android.Manifest;
 import android.Manifest.permission;
 import android.annotation.SuppressLint;
 import android.content.ComponentName;
-import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.location.Location;
