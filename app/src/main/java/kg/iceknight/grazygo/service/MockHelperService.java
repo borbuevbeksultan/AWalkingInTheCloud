@@ -1,10 +1,13 @@
 package kg.iceknight.grazygo.service;
 
 import android.annotation.SuppressLint;
+import android.app.AppOpsManager;
 import android.content.Context;
+import android.os.Build;
 import android.provider.Settings;
 import android.util.Log;
 
+import kg.iceknight.grazygo.BuildConfig;
 import kg.iceknight.grazygo.R;
 import kg.iceknight.grazygo.background.service.MockingService;
 
@@ -50,11 +53,17 @@ public class MockHelperService {
     }
 
     public static boolean isMockSettingsON(Context context) {
-        // returns true if mock location enabled, false if not enabled.
-        if (Settings.Secure.getString(context.getContentResolver(),
-                Settings.Secure.ALLOW_MOCK_LOCATION).equals("0"))
+        boolean isMockLocation;
+        try {
+            if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                AppOpsManager opsManager = (AppOpsManager) context.getSystemService(Context.APP_OPS_SERVICE);
+                isMockLocation = (opsManager.checkOp(AppOpsManager.OPSTR_MOCK_LOCATION, android.os.Process.myUid(), BuildConfig.APPLICATION_ID)== AppOpsManager.MODE_ALLOWED);
+            } else {
+                isMockLocation = !Settings.Secure.getString(context.getContentResolver(), "mock_location").equals("0");
+            }
+        } catch (Exception e) {
             return false;
-        else
-            return true;
+        }
+        return isMockLocation;
     }
 }
