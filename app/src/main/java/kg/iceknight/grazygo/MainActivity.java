@@ -70,21 +70,22 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         Log.d(LOG_TAG, "MainActivity onCreate()");
         setContentView(R.layout.main_activity);
+        if (!((LocationManager) getSystemService(LOCATION_SERVICE)).isProviderEnabled(NETWORK_PROVIDER)) {
+            Toast.makeText(MainActivity.this, "Включите GPS и имитацию GPS", Toast.LENGTH_LONG).show();
+            finishAffinity();
+            return;
+        }
+        if (!MockHelperService.isMockSettingsON(this)) {
+            Toast.makeText(MainActivity.this, "Включите имитация местоположения", Toast.LENGTH_LONG).show();
+            startActivity(new Intent(android.provider.Settings.ACTION_APPLICATION_DEVELOPMENT_SETTINGS));
+            finishAffinity();
+            return;
+        }
         int permStatusFineLoc = ContextCompat.checkSelfPermission(this, permission.ACCESS_FINE_LOCATION);
         if (permStatusFineLoc != PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this,
                     new String[]{permission.ACCESS_FINE_LOCATION}, 1);
         } else {
-            if (!((LocationManager) getSystemService(LOCATION_SERVICE)).isProviderEnabled(NETWORK_PROVIDER)) {
-                Toast.makeText(MainActivity.this, "Включите GPS и имитация GPS", Toast.LENGTH_LONG).show();
-                finishAffinity();
-                return;
-            }
-            if (!MockHelperService.isMockSettingsON(this)) {
-                Toast.makeText(MainActivity.this, "Включите имитация местоположения", Toast.LENGTH_LONG).show();
-                finishAffinity();
-                return;
-            }
             initializeUI();
         }
 
