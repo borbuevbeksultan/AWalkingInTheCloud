@@ -76,8 +76,7 @@ public class MainActivity extends AppCompatActivity {
             return;
         }
         if (!MockHelperService.isMockSettingsON(this)) {
-            Toast.makeText(MainActivity.this, "Включите имитация местоположения", Toast.LENGTH_LONG).show();
-            startActivity(new Intent(android.provider.Settings.ACTION_APPLICATION_DEVELOPMENT_SETTINGS));
+            Toast.makeText(MainActivity.this, "Включите имитацию местоположения", Toast.LENGTH_LONG).show();
             finishAffinity();
             return;
         }
