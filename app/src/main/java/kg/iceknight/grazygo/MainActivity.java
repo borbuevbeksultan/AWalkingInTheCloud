@@ -1,18 +1,20 @@
 package kg.iceknight.grazygo;
 
 import android.Manifest;
+import android.Manifest.permission;
 import android.annotation.SuppressLint;
 import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
-import android.content.pm.PackageManager;
 import android.location.Location;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.IBinder;
-import android.os.VibrationEffect;
 import android.os.Vibrator;
-import android.provider.Settings;
+import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -21,8 +23,6 @@ import android.widget.EditText;
 import android.widget.NumberPicker;
 import android.widget.RadioButton;
 import android.widget.Toast;
-
-import java.util.concurrent.Executors;
 
 import kg.iceknight.grazygo.background.service.MockingService;
 import kg.iceknight.grazygo.background.service.helper.ServiceBinder;
@@ -33,6 +33,8 @@ import kg.iceknight.grazygo.service.MockService;
 import kg.iceknight.grazygo.service.NotificationService;
 import kg.iceknight.grazygo.service.ServiceCollection;
 
+import static android.content.pm.PackageManager.PERMISSION_GRANTED;
+import static android.location.LocationManager.NETWORK_PROVIDER;
 import static kg.iceknight.grazygo.common.Constants.LOG_TAG;
 
 public class MainActivity extends AppCompatActivity {
@@ -51,30 +53,50 @@ public class MainActivity extends AppCompatActivity {
     public Integer variant = 1;
 
 
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        switch (requestCode) {
+            case 1:
+                if (grantResults.length > 0 && grantResults[0] == PERMISSION_GRANTED) {
+                    initializeUI();
+                } else {
+                    Toast.makeText(MainActivity.this, "Разрешите приложению доступ к GPS", Toast.LENGTH_LONG).show();
+                }
+                break;
+        }
+    }
+
     @SuppressLint("NewApi")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Log.d(LOG_TAG, "MainActivity onCreate()");
         setContentView(R.layout.main_activity);
-        initializeUI();
-        if (ActivityCompat
-                .checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
-                ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this ,new String[]{Manifest.permission.ACCESS_FINE_LOCATION},1);
-            ActivityCompat.requestPermissions(this ,new String[]{Manifest.permission.ACCESS_COARSE_LOCATION},2);
-        }
-        if (Settings.Secure.getString(getContentResolver(),
-                Settings.Secure.ALLOW_MOCK_LOCATION).equals("0")) {
-            Toast.makeText(MainActivity.this, "Включите фиктивное местоположение", Toast.LENGTH_LONG).show();
-            startActivity(new Intent(android.provider.Settings.ACTION_APPLICATION_DEVELOPMENT_SETTINGS));
+        int permStatusFineLoc = ContextCompat.checkSelfPermission(this, permission.ACCESS_FINE_LOCATION);
+        if (permStatusFineLoc != PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this,
+                    new String[]{permission.ACCESS_FINE_LOCATION}, 1);
+        } else {
+            if (!((LocationManager) getSystemService(LOCATION_SERVICE)).isProviderEnabled(NETWORK_PROVIDER)) {
+                Toast.makeText(MainActivity.this, "Включите GPS и имитация GPS", Toast.LENGTH_LONG).show();
+                finishAffinity();
+                return;
+            }
+            if (!MockHelperService.isMockSettingsON(this)) {
+                Toast.makeText(MainActivity.this, "Включите имитация местоположения", Toast.LENGTH_LONG).show();
+                finishAffinity();
+                return;
+            }
+            initializeUI();
         }
 
     }
 
     @Override
     protected void onDestroy() {
-        unbindService(serviceConnection);
+        if (mockingService != null) {
+            unbindService(serviceConnection);
+        }
         Log.d(LOG_TAG, "MainActivity onDestroy");
         super.onDestroy();
     }

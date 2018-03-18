@@ -6,6 +6,7 @@ import android.location.Location;
 import android.location.LocationManager;
 import android.location.LocationProvider;
 import android.os.SystemClock;
+import android.support.annotation.NonNull;
 import android.util.Log;
 
 import static android.content.Context.LOCATION_SERVICE;
@@ -46,7 +47,7 @@ public class MockService {
     }
 
     @SuppressLint("NewApi")
-    public Location setLocation(Location mockLocation) {
+    public Location setLocation(@NonNull Location mockLocation) {
         Log.d(LOG_TAG, "MockService setLocation " + mockLocation.toString());
         Location location = new Location(LocationManager.GPS_PROVIDER);
         locationManager.addTestProvider(LocationManager.GPS_PROVIDER, false, false,

@@ -2,6 +2,7 @@ package kg.iceknight.grazygo.handler;
 
 import android.annotation.SuppressLint;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.View;
 import android.widget.Button;
 
@@ -69,6 +70,8 @@ public class MainButtonHandler implements View.OnClickListener {
         resetButton.setBackground(context.getResources().getDrawable(R.drawable.mainbuttonclicked));
         setButton.setText("Not Available");
         resetButton.setText("Not Available");
+        setButton.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20);
+        resetButton.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20);
         buttonStatus = "working";
         button.setBackground(context.getResources().getDrawable(R.drawable.mainbuttonclicked));
         button.setText("Working...");

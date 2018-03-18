@@ -1,6 +1,8 @@
 package kg.iceknight.grazygo.service;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
+import android.provider.Settings;
 import android.util.Log;
 
 import kg.iceknight.grazygo.R;
@@ -45,5 +47,14 @@ public class MockHelperService {
     public void set(Double distance, int variant, Integer delay) {
         Log.d(LOG_TAG, "MockingHelperService Start() distance = " + distance);
         mockingService.setParam(distance, variant, delay);
+    }
+
+    public static boolean isMockSettingsON(Context context) {
+        // returns true if mock location enabled, false if not enabled.
+        if (Settings.Secure.getString(context.getContentResolver(),
+                Settings.Secure.ALLOW_MOCK_LOCATION).equals("0"))
+            return false;
+        else
+            return true;
     }
 }
