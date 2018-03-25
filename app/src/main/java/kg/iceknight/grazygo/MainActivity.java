@@ -15,6 +15,8 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -32,6 +34,7 @@ import kg.iceknight.grazygo.service.NotificationService;
 import kg.iceknight.grazygo.service.ServiceCollection;
 
 import static android.content.pm.PackageManager.PERMISSION_GRANTED;
+import static android.location.LocationManager.GPS_PROVIDER;
 import static android.location.LocationManager.NETWORK_PROVIDER;
 import static kg.iceknight.grazygo.common.Constants.LOG_TAG;
 
@@ -49,7 +52,26 @@ public class MainActivity extends AppCompatActivity {
     public Integer distance = 1;
     public Integer delay = 1;
     public Integer variant = 1;
+    public boolean isUIInitialized;
 
+    @SuppressLint("NewApi")
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Log.d(LOG_TAG, "MainActivity onResume()");
+        if (!((LocationManager) getSystemService(LOCATION_SERVICE)).isProviderEnabled(NETWORK_PROVIDER) ||
+                !((LocationManager) getSystemService(LOCATION_SERVICE)).isProviderEnabled(GPS_PROVIDER)) {
+            Toast.makeText(MainActivity.this, "Включите GPS и имитацию GPS", Toast.LENGTH_LONG).show();
+            return;
+        }
+        if (!MockHelperService.isMockSettingsON(this)) {
+            Toast.makeText(MainActivity.this, "Включите имитацию местоположения", Toast.LENGTH_LONG).show();
+        }
+        if (!isUIInitialized) {
+            initializeUI();
+        }
+
+    }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
@@ -70,14 +92,14 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         Log.d(LOG_TAG, "MainActivity onCreate()");
         setContentView(R.layout.main_activity);
-        if (!((LocationManager) getSystemService(LOCATION_SERVICE)).isProviderEnabled(NETWORK_PROVIDER)) {
+
+        if (!((LocationManager) getSystemService(LOCATION_SERVICE)).isProviderEnabled(NETWORK_PROVIDER) ||
+                !((LocationManager) getSystemService(LOCATION_SERVICE)).isProviderEnabled(GPS_PROVIDER)) {
             Toast.makeText(MainActivity.this, "Включите GPS и имитацию GPS", Toast.LENGTH_LONG).show();
-            finishAffinity();
             return;
         }
         if (!MockHelperService.isMockSettingsON(this)) {
             Toast.makeText(MainActivity.this, "Включите имитацию местоположения", Toast.LENGTH_LONG).show();
-            finishAffinity();
             return;
         }
         int permStatusFineLoc = ContextCompat.checkSelfPermission(this, permission.ACCESS_FINE_LOCATION);
@@ -99,7 +121,19 @@ public class MainActivity extends AppCompatActivity {
         super.onDestroy();
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu, menu);
+        MenuItem item = menu.getItem(0);
+        item.setOnMenuItemClickListener(menuItem -> {
+            startActivity(new Intent(android.provider.Settings.ACTION_APPLICATION_DEVELOPMENT_SETTINGS));
+            return true;
+        });
+        return true;
+    }
+
     private void initializeUI() {
+        isUIInitialized = true;
         setBtn = findViewById(R.id.setBtn);
         resetBtn = findViewById(R.id.resetBtn);
         mainButton = findViewById(R.id.mainButton);

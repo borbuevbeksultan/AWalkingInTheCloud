@@ -29,7 +29,7 @@ public class NotificationControlDaemon extends Service {
     public int onStartCommand(Intent intent, int flags, int startId) {
         Log.d(LOG, "Notification Daemon onStartCommand. StartId = " + startId + " hashcode " + intent.hashCode());
         ServiceCollection.getMockHelperService().processRequest(ServiceCollection.getControlStatus());
-        ServiceCollection.getVibrator().vibrate(100);
+        ServiceCollection.getVibrator().vibrate(50);
         ServiceCollection.getMainButtonHandler().set();
         stopSelf(startId);
         return super.onStartCommand(intent, flags, startId);

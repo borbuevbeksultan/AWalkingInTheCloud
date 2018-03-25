@@ -23,7 +23,10 @@ public class MockService {
     public MockService(Context context) {
         this.context = context;
         locationManager = (LocationManager) context.getSystemService(LOCATION_SERVICE);
-        currentLocation = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+        if (locationManager != null) {
+            currentLocation = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+        }
+
     }
 
     public void walk() {
@@ -47,7 +50,10 @@ public class MockService {
     }
 
     @SuppressLint("NewApi")
-    public Location setLocation(@NonNull Location mockLocation) {
+    public Location setLocation(Location mockLocation) {
+        if (mockLocation == null) {
+            return null;
+        }
         Log.d(LOG_TAG, "MockService setLocation " + mockLocation.toString());
         Location location = new Location(LocationManager.GPS_PROVIDER);
         locationManager.addTestProvider(LocationManager.GPS_PROVIDER, false, false,
@@ -69,11 +75,16 @@ public class MockService {
 
     @SuppressLint("MissingPermission")
     public void disableMockLocation() {
-        Location currentLocation = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
-        setLocation(currentLocation);
-        if (locationManager.getProvider(LocationManager.GPS_PROVIDER) != null) {
-            locationManager.removeTestProvider(LocationManager.GPS_PROVIDER);
-        }
+        try {
+            Location currentLocation = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+            if (currentLocation != null) {
+                setLocation(currentLocation);
+            }
+            if (locationManager.getProvider(LocationManager.GPS_PROVIDER) != null) {
+                locationManager.removeTestProvider(LocationManager.GPS_PROVIDER);
+            }
+        } catch (Exception e) { }
+
     }
 
 }
