@@ -41,6 +41,6 @@ public class MockTimerJumpTask extends TimerTask {
         Log.d(Constants.LOG_TAG, String.valueOf(endTime - startTime));
         ServiceCollection.getMainActivity().runOnUiThread(() -> ServiceCollection.getMockHelperService().reset());
         ServiceCollection.getNotificationService().config(Constants.PAUSE_REQUEST_CODE).showNotification();
-        ServiceCollection.getVibrator().vibrate(100);
+        ServiceCollection.getVibrator().vibrate(50);
     }
 }

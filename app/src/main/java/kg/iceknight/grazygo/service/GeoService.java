@@ -5,6 +5,9 @@ import android.location.LocationManager;
 
 public class GeoService {
     public static Location calcNextCoord(Location location, Integer offset) {
+        if (location == null) {
+            return null;
+        }
         Double latitude = location.getLatitude();
         Double longitute = location.getLongitude();
 

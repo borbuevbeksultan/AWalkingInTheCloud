@@ -30,7 +30,7 @@ public class MockTimerTask extends TimerTask {
         if (iterations.get() <= 0) {
             ServiceCollection.getNotificationService().config(Constants.PAUSE_REQUEST_CODE).showNotification();
             ServiceCollection.getMainActivity().runOnUiThread(() -> ServiceCollection.getMockHelperService().reset());
-            ServiceCollection.getVibrator().vibrate(100);
+            ServiceCollection.getVibrator().vibrate(50);
             executor.cancel();
             return;
         }

@@ -32,11 +32,13 @@ public class NotificationService implements Serializable {
     private String infoText;
     private int requestCode;
     private int resetIcon;
+    private int exitIcon;
 
     public NotificationService(MainActivity context) {
         this.context = context;
         this.controlIcon = R.drawable.ic_play_arrow_white_24dp;
         this.resetIcon = R.drawable.ic_power_settings_new_white_24dp;
+        this.exitIcon = R.drawable.ic_clear_white_24dp;
         this.infoText = "Play";
         this.requestCode = PLAY_REQUEST_CODE;
         mNotificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
@@ -67,11 +69,10 @@ public class NotificationService implements Serializable {
                             .setContentText("Press buttons")
                             .addAction(controlIcon, infoText, pendingIntentControl)
                             .addAction(resetIcon, "Reset", pendingIntentReset)
+                            .addAction(exitIcon, "Exit", pendingIntentExit)
                             .setPriority(Notification.PRIORITY_HIGH)
                             .setStyle(new android.support.v4.media.app.NotificationCompat.MediaStyle()
-                                    .setShowCancelButton(true)
-                                    .setCancelButtonIntent(pendingIntentExit)
-                                    .setShowActionsInCompactView(0, 1))
+                                    .setShowActionsInCompactView(0, 1, 2))
                             .setVisibility(Notification.VISIBILITY_PUBLIC);
 
             Intent resultIntent = new Intent();
