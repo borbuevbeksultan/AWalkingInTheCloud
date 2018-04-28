@@ -16,11 +16,13 @@ public class MockTimerTask extends TimerTask {
     private MockService mockService;
     private Timer executor;
     private AtomicInteger iterations;
+    private AtomicInteger delaySpeed;
 
     public MockTimerTask(MockService mockService, Timer executor, AtomicInteger iterations) {
         this.mockService = mockService;
         this.executor = executor;
         this.iterations = iterations;
+        delaySpeed = new AtomicInteger(2000);
     }
 
     @SuppressLint("NewApi")
@@ -34,6 +36,17 @@ public class MockTimerTask extends TimerTask {
             executor.cancel();
             return;
         }
+
+        Log.d(Constants.LOG_TAG, "DelaySpeed: " + delaySpeed);
+
+        //The speed of movement will increase every step. Delay between step will decrease
+        if (delaySpeed.longValue() > 0) {
+            try {
+                Thread.sleep(delaySpeed.longValue());
+                delaySpeed.set(delaySpeed.intValue() - 100);
+            } catch (InterruptedException e) { e.printStackTrace(); }
+        }
+
         Log.d(Constants.LOG_TAG, "TimerTask remain = " + iterations.toString());
         mockService.walk();
         iterations.decrementAndGet();
